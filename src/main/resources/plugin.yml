@@ -1,0 +1,7 @@
+name: Petting
+version: '${version}'
+main: nobrehd.Petting
+api-version: 1.18
+prefix: <*PETTING*>
+authors: [ NobreHD ]
+description: Plugin that allows players to pet dogs and cats
