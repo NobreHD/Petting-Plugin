@@ -49,20 +49,19 @@ public final class Petting extends JavaPlugin implements Listener {
         if (player.isSneaking()) {
             Entity entity = event.getRightClicked();
             String nametag = entity.getCustomName();
-            String text = null;
+            List<String> selection = new ArrayList<>();
             if (entity instanceof Wolf){
                 if (nametag != null){
-                    text = dogs_with_nametag.get(rand.nextInt(dogs_with_nametag.size())).replace("?name", nametag);
-                }else{
-                    text = dogs_without_nametag.get(rand.nextInt(dogs_without_nametag.size()));
+                    selection.addAll(dogs_with_nametag);
                 }
+                selection.addAll(dogs_without_nametag);
             }else if(entity instanceof Cat){
                 if (nametag != null){
-                    text = cats_with_nametag.get(rand.nextInt(cats_with_nametag.size())).replace("?name", nametag);
-                }else{
-                    text = cats_without_nametag.get(rand.nextInt(cats_without_nametag.size()));
+                    selection.addAll(cats_with_nametag);
                 }
+                selection.addAll(cats_without_nametag);
             }else return;
+            String text = selection.get(rand.nextInt(selection.size())).replace("?name", nametag == null? "" : nametag);
             Tameable cuties = (Tameable) entity;
             if (!cuties.isTamed()) return;
             Location spawn = cuties.getLocation();
