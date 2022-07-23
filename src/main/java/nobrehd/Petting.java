@@ -1,9 +1,14 @@
 package nobrehd;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,15 +16,15 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
-import java.util.function.BiConsumer;
 
-public final class Petting extends JavaPlugin implements Listener {
-
-    List<String> dogs_with_nametag = Arrays.asList("*?name starts wagging its tail*");
-    List<String> cats_with_nametag = Arrays.asList("Pss pss pss, ?name come here");
-    List<String> dogs_without_nametag = Arrays.asList("Who is the cutest doggo?", "Good boy");
-    List<String> cats_without_nametag = Arrays.asList("Here, kitty, kitty");
+public final class Petting extends JavaPlugin implements Listener, CommandExecutor {
+    Map<String, List<String>> greetings = update();
     Random rand = new Random();
     JSONObject timeout_players = new JSONObject();
     int repeat_id = 0;
@@ -38,6 +43,7 @@ public final class Petting extends JavaPlugin implements Listener {
                 }
             }
         }, 0, 60);
+        this.getCommand("update").setExecutor(this);
     }
 
     @Override
@@ -49,17 +55,18 @@ public final class Petting extends JavaPlugin implements Listener {
         if (player.isSneaking()) {
             Entity entity = event.getRightClicked();
             String nametag = entity.getCustomName();
-            List<String> selection = new ArrayList<>();
+            List<String> selection = Arrays.asList();
+            selection.addAll(this.greetings.get("both"));
             if (entity instanceof Wolf){
                 if (nametag != null){
-                    selection.addAll(dogs_with_nametag);
+                    selection.addAll(this.greetings.get("dogs_named"));
                 }
-                selection.addAll(dogs_without_nametag);
+                selection.addAll(this.greetings.get("dogs"));
             }else if(entity instanceof Cat){
                 if (nametag != null){
-                    selection.addAll(cats_with_nametag);
+                    selection.addAll(this.greetings.get("cats_named"));
                 }
-                selection.addAll(cats_without_nametag);
+                selection.addAll(this.greetings.get("cats_named"));
             }else return;
             String text = selection.get(rand.nextInt(selection.size())).replace("?name", nametag == null? "" : nametag);
             Tameable cuties = (Tameable) entity;
@@ -83,5 +90,42 @@ public final class Petting extends JavaPlugin implements Listener {
             player.sendMessage(message);
             event.setCancelled(true);
         }
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+        if (sender.isOp()){
+            Map<String, List<String>> list = update();
+            if (list != null) {
+                this.greetings = list;
+                sender.sendMessage("List Updated");
+                return true;
+            }
+            sender.sendMessage("Error Receiving Data");
+        }else{
+            sender.sendMessage("You don't have permissions to run this command");
+        }
+        return false;
+    }
+
+    static public Map<String, List<String>> update(){
+        try {
+            URL url = new URL("https://nobrehd.github.io/Petting-Plugin/api/greetings.json");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            connection.disconnect();
+            Type mapType = new TypeToken<Map<String,List<String>>>(){}.getType();
+            return new Gson().fromJson(content.toString(), mapType);
+        } catch (Exception e){}
+        return null;
     }
 }
