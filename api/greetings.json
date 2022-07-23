@@ -1,7 +1,7 @@
 {
   "both": ["Aren't you a cute one?"],
   "dogs_named": ["*?name starts wagging its tail*"],
-  "dogs": ["Who is the cutest doggo?", "Good boy"],
+  "dogs": ["Who is the cutest doggo?", "Good dog"],
   "cats_named": ["Pss pss pss, ?name come here"],
-  "cats": ["Here, kitty, kitty", "Heya pretty kitty", "Sooo ferocious OwO"]
+  "cats": ["Here, kitty, kitty", "Heya pretty kitty", "Sooo ferocious OwO", "Good cat"]
 }
