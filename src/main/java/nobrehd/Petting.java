@@ -55,7 +55,7 @@ public final class Petting extends JavaPlugin implements Listener, CommandExecut
         if (player.isSneaking()) {
             Entity entity = event.getRightClicked();
             String nametag = entity.getCustomName();
-            List<String> selection = Arrays.asList();
+            List<String> selection = new LinkedList<String>(Arrays.asList());
             selection.addAll(this.greetings.get("both"));
             if (entity instanceof Wolf){
                 if (nametag != null){
