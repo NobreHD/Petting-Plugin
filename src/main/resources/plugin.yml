@@ -6,6 +6,12 @@ prefix: <*PETTING*>
 authors: [ NobreHD ]
 description: Plugin that allows players to pet dogs and cats
 commands:
-  update:
+  petting:
     description: Update the list of greettings
-    usage: /update
+    usage: /petting
+    permission: petting.admin
+
+permissions:
+  petting.admin:
+    description: Allows the player to use the /petting command
+    default: op

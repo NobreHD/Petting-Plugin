@@ -43,7 +43,7 @@ public final class Petting extends JavaPlugin implements Listener, CommandExecut
                 if (unix + 3 < actual_unix) timeout_players.remove(key);
             }
         }, 0, 60);
-        this.getCommand("update").setExecutor(this);
+        this.getCommand("petting").setExecutor(this);
     }
 
     @Override
@@ -104,13 +104,13 @@ public final class Petting extends JavaPlugin implements Listener, CommandExecut
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
-        if (sender.isOp()){
+        if (sender.hasPermission("petting.admin")){
             Map<String, List<String>> list = update();
             if (list != null) {
                 this.greetings = list;
                 sendMessage(sender, "Data Updated", NamedTextColor.GREEN);
             } else sendMessage(sender, "Error Updating Data", NamedTextColor.RED);
-        }else sendMessage(sender, "You don't have permission to use this command", NamedTextColor.RED);
+        } else sendMessage(sender, "You don't have permission to use this command", NamedTextColor.RED);
         return true;
     }
 
