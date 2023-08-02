@@ -86,13 +86,13 @@ public final class Petting extends JavaPlugin implements Listener, CommandExecut
             }else return;
 
             TextReplacementConfig replacementConfig = TextReplacementConfig.builder()
-                    .match("{name}")
+                    .match("<name>")
                     .replacement(nametag != null ? nametag : Component.text(""))
                     .build();
             Component text = Component.text(selection.get(rand.nextInt(selection.size())))
                     .replaceText(replacementConfig);
 
-            Component heart = Component.text(" ♡ ").color(NamedTextColor.RED);
+            Component heart = Component.text(" \u2764 ").color(NamedTextColor.RED);
 
             Location spawn = entity.getLocation();
             spawn.add(0, 1, 0);

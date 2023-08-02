@@ -1,7 +1,7 @@
 name: Petting
 version: '${version}'
 main: nobrehd.Petting
-api-version: 1.20.1
+api-version: 1.20
 prefix: <*PETTING*>
 authors: [ NobreHD ]
 description: Plugin that allows players to pet dogs and cats
